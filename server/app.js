@@ -13,6 +13,8 @@ const port = process.env.PORT || 3004
 const HealthRoutes = require('./src/routes/health.routes')
 const AgentRoutes = require('./src/routes/agent-routes')
 const RegionRoutes = require('./src/routes/region-routes')
+const UserRoutes = require('./src/routes/user-routes')
+
 
 const { setActive } = require('./src/utils/auth')
 setActive(process.env)
@@ -26,6 +28,7 @@ initLogger(app, process.env)
 HealthRoutes.registerHealthRoutes(app)
 AgentRoutes.registerAgentRoutes(app)
 RegionRoutes.registerRegionRoutes(app)
+UserRoutes.registerUserRoutes(app)
 
 MongoManager.openMongoConnection(process.env.MONGO_URI)
 

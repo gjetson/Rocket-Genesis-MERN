@@ -14,7 +14,7 @@ const Agent = (props) => (
             <Link className="btn btn-link" to={`/edit/${props.agent._id}`}>Edit</Link>
             <button className="btn btn-link"
                 onClick={() => {
-                    props.deleteRecord(props.agent._id)
+                    props.deleteAgent(props.agent._id)
                 }}
             >
                 Delete
@@ -46,7 +46,7 @@ export default function AgentList() {
     }, [agents.length])
 
     async function deleteAgent(id) {
-        await fetch(`http://localhost:3004/agent-delete${id}`, {
+        await fetch(`http://localhost:3004/agent/delete/${id}`, {
             method: "DELETE"
         })
 
@@ -75,7 +75,6 @@ export default function AgentList() {
                     <tr>
                         <th>First Name</th>
                         <th>Last Name</th>
-                        <th>Email</th>
                         <th>Email</th>
                         <th>Region</th>
                         <th>Rating</th>

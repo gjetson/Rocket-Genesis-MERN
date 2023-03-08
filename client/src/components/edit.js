@@ -3,37 +3,36 @@ import { useParams, useNavigate } from "react-router"
 
 export default function Edit() {
     const [form, setForm] = useState({
-        name: "",
-        position: "",
-        level: "",
-        records: [],
+        first_name: "",
+        last_name: "",
+        email: "",
+        region: "",
+        rating: "",
+        fee: "",
+        sales: "",
+        agents: [],
     })
     const params = useParams()
     const navigate = useNavigate()
 
     useEffect(() => {
         async function fetchData() {
-            const id = params.id.toString()
-            const response = await fetch(`http://localhost:5000/record/${params.id.toString()}`)
+            const response = await fetch(`http://localhost:3004/agent/${params.id}`)
 
             if (!response.ok) {
                 const message = `An error has occurred: ${response.statusText}`
                 window.alert(message)
                 return
             }
-
-            const record = await response.json()
-            if (!record) {
-                window.alert(`Record with id ${id} not found`)
+            const agent = await response.json()
+            if (!agent) {
+                window.alert(`Agent with id ${params.id} not found`)
                 navigate("/")
                 return
             }
-
-            setForm(record)
+            setForm(agent)
         }
-
         fetchData()
-
         return
     }, [params.id, navigate])
 
@@ -43,19 +42,22 @@ export default function Edit() {
             return { ...prev, ...value }
         })
     }
-
     async function onSubmit(e) {
         e.preventDefault()
-        const editedPerson = {
-            name: form.name,
-            position: form.position,
-            level: form.level,
+        const editedAgent = {
+            first_name: form.first_name,
+            last_name: form.last_name,
+            email: form.email,
+            region: form.region,
+            rating: form.rating,
+            fee: form.fee,
+            sales: form.sales
         }
 
         // This will send a post request to update the data in the database.
-        await fetch(`http://localhost:5000/update/${params.id}`, {
+        await fetch(`http://localhost:3004/agent/update/${params.id}`, {
             method: "POST",
-            body: JSON.stringify(editedPerson),
+            body: JSON.stringify(editedAgent),
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -63,30 +65,39 @@ export default function Edit() {
 
         navigate("/")
     }
-
-    // This following section will display the form that takes input from the user to update the data.
+    // display the update form
     return (
         <div>
-            <h3>Update Record</h3>
+            <h3>Update Agent</h3>
             <form onSubmit={onSubmit}>
                 <div className="form-group">
-                    <label htmlFor="name">Name: </label>
+                    <label htmlFor="name">First Name: </label>
                     <input
                         type="text"
                         className="form-control"
-                        id="name"
-                        value={form.name}
-                        onChange={(e) => updateForm({ name: e.target.value })}
+                        id="first_name"
+                        value={form.first_name}
+                        onChange={(e) => updateForm({ first_name: e.target.value })}
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="position">Position: </label>
+                    <label htmlFor="position">Last Name: </label>
                     <input
                         type="text"
                         className="form-control"
-                        id="position"
-                        value={form.position}
-                        onChange={(e) => updateForm({ position: e.target.value })}
+                        id="last_name"
+                        value={form.last_name}
+                        onChange={(e) => updateForm({ last_name: e.target.value })}
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="position">Email: </label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="email"
+                        value={form.email}
+                        onChange={(e) => updateForm({ email: e.target.value })}
                     />
                 </div>
                 <div className="form-group">
@@ -95,44 +106,85 @@ export default function Edit() {
                             className="form-check-input"
                             type="radio"
                             name="positionOptions"
-                            id="positionIntern"
-                            value="Intern"
-                            checked={form.level === "Intern"}
-                            onChange={(e) => updateForm({ level: e.target.value })}
+                            id="regionNorth"
+                            value="north"
+                            checked={form.region === "north"}
+                            onChange={(e) => updateForm({ region: e.target.value })}
                         />
-                        <label htmlFor="positionIntern" className="form-check-label">Intern</label>
+                        <label htmlFor="regionNorth" className="form-check-label">North</label>
                     </div>
                     <div className="form-check form-check-inline">
                         <input
                             className="form-check-input"
                             type="radio"
                             name="positionOptions"
-                            id="positionJunior"
-                            value="Junior"
-                            checked={form.level === "Junior"}
-                            onChange={(e) => updateForm({ level: e.target.value })}
+                            id="regionSouth"
+                            value="south"
+                            checked={form.region === "south"}
+                            onChange={(e) => updateForm({ region: e.target.value })}
                         />
-                        <label htmlFor="positionJunior" className="form-check-label">Junior</label>
+                        <label htmlFor="regionSouth" className="form-check-label">South</label>
                     </div>
                     <div className="form-check form-check-inline">
                         <input
                             className="form-check-input"
                             type="radio"
                             name="positionOptions"
-                            id="positionSenior"
-                            value="Senior"
-                            checked={form.level === "Senior"}
-                            onChange={(e) => updateForm({ level: e.target.value })}
+                            id="regionEast"
+                            value="east"
+                            checked={form.region === "east"}
+                            onChange={(e) => updateForm({ region: e.target.value })}
                         />
-                        <label htmlFor="positionSenior" className="form-check-label">Senior</label>
+                        <label htmlFor="regionEast" className="form-check-label">East</label>
+                    </div>
+                    <div className="form-check form-check-inline">
+                        <input
+                            className="form-check-input"
+                            type="radio"
+                            name="positionOptions"
+                            id="regionWest"
+                            value="west"
+                            checked={form.region === "west"}
+                            onChange={(e) => updateForm({ region: e.target.value })}
+                        />
+                        <label htmlFor="regionWest" className="form-check-label">West</label>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="position">Rating: </label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="rating"
+                            value={form.rating}
+                            onChange={(e) => updateForm({ rating: e.target.value })}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="position">Fee: </label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="fee"
+                            value={form.fee}
+                            onChange={(e) => updateForm({ fee: e.target.value })}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="position">Sales: </label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="sales"
+                            value={form.sales}
+                            onChange={(e) => updateForm({ sales: e.target.value })}
+                        />
                     </div>
                 </div>
                 <br />
-
                 <div className="form-group">
                     <input
                         type="submit"
-                        value="Update Record"
+                        value="Update Agent"
                         className="btn btn-primary"
                     />
                 </div>
