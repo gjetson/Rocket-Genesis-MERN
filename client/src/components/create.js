@@ -141,16 +141,6 @@ export default function Create() {
                             onChange={(e) => updateForm({ fee: e.target.value })}
                         />
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="position">Sales</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="sales"
-                            value={form.sales}
-                            onChange={(e) => updateForm({ sales: e.target.value })}
-                        />
-                    </div>
                 </div>
                 <div className="form-group">
                     <input

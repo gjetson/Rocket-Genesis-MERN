@@ -1,4 +1,5 @@
 import React from "react"
+import './css/App.css'
 
 // We use Route in order to define the different routes of our application
 import { Route, Routes } from "react-router-dom"
@@ -8,17 +9,21 @@ import Navbar from "./components/navbar"
 import AgentList from "./components/agentList"
 import Edit from "./components/edit"
 import Create from "./components/create"
+import Login from "./components/login"
 
 const App = () => {
     return (
-        <div>
+        <div className="app-container bg-light App">
             <Navbar />
-            <Routes>
-                <Route exact path="/" element={<AgentList />} />
-                <Route path="/edit/:id" element={<Edit />} />
-                <Route path="/create" element={<Create />} />
-            </Routes>
-        </div>
+            <div className="container pt-4 pb-4">
+                <Routes>
+                    <Route exact path="/" element={<AgentList />} />
+                    <Route path="/edit/:id" element={<Edit />} />
+                    <Route path="/create" element={<Create />} />
+                    <Route path="/login" element={<Login />} />
+                </Routes>
+            </div>
+        </div >
     )
 }
 

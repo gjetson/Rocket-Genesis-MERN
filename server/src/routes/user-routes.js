@@ -6,7 +6,9 @@ const registerUserRoutes = (app) => {
     app.get('/users', isAuth, UserController.getUsers)
     app.get('/user/:id', isAuth, UserController.getUser)
     app.post('/user/update/:id', isAuth, UserController.updateUser)
+    app.post('/user/verify', isAuth, UserController.verifyUser)
     app.delete('/user/delete/:id', isAuth, UserController.deleteUser)
 }
 
 module.exports = { registerUserRoutes }
+

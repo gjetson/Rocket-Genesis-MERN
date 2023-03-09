@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
+const bcrypt = require('mongoose-bcrypt')
 
 const UserSchema = mongoose.Schema({
     first_name: {
@@ -31,6 +32,7 @@ const UserSchema = mongoose.Schema({
     },
 }, { timestamps: true })
 
-UserSchema.plugin(require('mongoose-bcrypt'))
+UserSchema.plugin(bcrypt)
 const User = mongoose.model('User', UserSchema)
+
 module.exports = User

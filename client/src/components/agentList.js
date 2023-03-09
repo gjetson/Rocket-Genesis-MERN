@@ -9,7 +9,6 @@ const Agent = (props) => (
         <td>{props.agent.region}</td>
         <td>{props.agent.rating}</td>
         <td>{props.agent.fee}</td>
-        <td>{props.agent.sales}</td>
         <td>
             <Link className="btn btn-link" to={`/edit/${props.agent._id}`}>Edit</Link>
             <button className="btn btn-link"
@@ -79,7 +78,7 @@ export default function AgentList() {
                         <th>Region</th>
                         <th>Rating</th>
                         <th>Fee</th>
-                        <th>Sales</th>
+                        <th><Link className="btn btn-link" to={`/create`}>Create Agent</Link></th>
                     </tr>
                 </thead>
                 <tbody>{agentList()}</tbody>
