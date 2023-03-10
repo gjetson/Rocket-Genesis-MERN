@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 
+
 const Agent = (props) => (
     <tr>
         <td>{props.agent.first_name}</td>

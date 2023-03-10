@@ -6,51 +6,75 @@ import { useNavigate } from "react-router"
 export default function (props) {
     const navigate = useNavigate()
 
+    const firstNameRef = useRef()
+    const lastNameRef = useRef()
     const emailRef = useRef()
     const passwordRef = useRef()
 
     const handleSubmit = (event) => {
         event.preventDefault()
+        const firstName = firstNameRef.current.value
+        const lastName = lastNameRef.current.value
         const email = emailRef.current.value
         const password = passwordRef.current.value
-        //alert(`${email} ${password}`)
-        login({
+        alert(`${firstName} ${lastName} ${email} ${password}`)
+        register({
+            first_name: firstName,
+            last_name: lastName,
             email: email,
             password: password
         })
     }
 
-    const login = async (body) => {
+    const register = async (body) => {
         try {
-            const valid = await fetch("http://localhost:3004/user/verify", {
+            const valid = await fetch("http://localhost:3004/user", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(body),
             })
-            console.log(valid)
             if (valid.status === 201) {
-                console.log('logged in')
-                // set auth token
-                navigate("/")
+                alert('valid')
+                navigate("/login")
             } else {
-                console.log('no bueno')
+                alert('no bueno')
                 navigate("/login")
             }
         } catch (error) {
-            console.error(error)
             window.alert(error)
         }
     }
-
     return (
         <div className="Auth-form-container">
             <form className="Auth-form" onSubmit={handleSubmit}>
                 <div className="Auth-form-content">
-                    <h3 className="Auth-form-title">Sign In</h3>
+                    <h3 className="Auth-form-title">Sign Up</h3>
                     <div className="text-center">
-                        Not registered yet? <a href="/register">Sign Up</a>
+                        Already registered? <a href="/login">Sign In</a>
+                    </div>
+                    <div className="form-group mt-3">
+                        <label htmlFor="first_name">First Name</label>
+                        <input
+                            id="first_name"
+                            type="text"
+                            className="form-control mt-1"
+                            placeholder="e.g Jane"
+                            required
+                            ref={firstNameRef}
+                        />
+                    </div>
+                    <div className="form-group mt-3">
+                        <label htmlFor="last_name">Last Name</label>
+                        <input
+                            id="last_name"
+                            type="text"
+                            className="form-control mt-1"
+                            placeholder="e.g Doe"
+                            required
+                            ref={lastNameRef}
+                        />
                     </div>
                     <div className="form-group mt-3">
                         <label htmlFor="email">Email address</label>
@@ -58,7 +82,7 @@ export default function (props) {
                             id='email'
                             type="email"
                             className="form-control mt-1"
-                            placeholder="Enter email"
+                            placeholder="Email Address"
                             required
                             ref={emailRef}
                         />
@@ -66,10 +90,10 @@ export default function (props) {
                     <div className="form-group mt-3">
                         <label htmlFor="password">Password</label>
                         <input
-                            id="password"
+                            id='password'
                             type="password"
                             className="form-control mt-1"
-                            placeholder="Enter password"
+                            placeholder="Password"
                             required
                             ref={passwordRef}
                         />
@@ -86,5 +110,4 @@ export default function (props) {
             </form>
         </div>
     )
-
 }

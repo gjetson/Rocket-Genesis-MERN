@@ -10,6 +10,7 @@ import AgentList from "./components/agentList"
 import Edit from "./components/edit"
 import Create from "./components/create"
 import Login from "./components/login"
+import Register from "./components/register"
 
 const App = () => {
     return (
@@ -21,6 +22,7 @@ const App = () => {
                     <Route path="/edit/:id" element={<Edit />} />
                     <Route path="/create" element={<Create />} />
                     <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
                 </Routes>
             </div>
         </div >
