@@ -15,19 +15,20 @@ const createUser = async (req, res) => {
     }
 }
 
-const verifyUser = async (req, res) => {
+const authenticateUser = async (req, res) => {
     try {
-        const user = await User.findOne({ email: req.body.email })
+        const user = await User.findOne({ email: req.body.username })
         if (user) {
             const valid = await user.verifyPassword(req.body.password)
             if (valid) {
-                res.status(201).json(valid)
+                console.log(valid)
+                res.status(201).json(user)
             } else {
-                res.status(201).json("false")
+                res.status(401).json({ msg: "false" })
             }
         }
         else {
-            res.status(400).json(`user not found for '${req.body.email}'`)
+            res.status(403).json(`user not found for '${req.body.email}'`)
         }
     } catch (err) {
         console.error(err)
@@ -38,6 +39,7 @@ const verifyUser = async (req, res) => {
 const getUsers = async (req, res) => {
     try {
         const usrs = await User.find({}).sort({ last_name: 1 })
+        console.log(usrs)
         res.status(200).json(usrs)
     } catch (err) {
         console.error(err)
@@ -95,4 +97,4 @@ const deleteUser = async (req, res) => {
     }
 }
 
-module.exports = { createUser, verifyUser, getUsers, getUser, updateUser, deleteUser }
+module.exports = { createUser, authenticateUser, getUsers, getUser, updateUser, deleteUser }

@@ -48,7 +48,8 @@ const getAgentsByRegion = async (req, res) => {
 
 const updateAgent = async (req, res) => {
     try {
-        const filtered = filterUpdates()
+        const filtered = filterUpdates(req.body)
+        console.log(filtered)
         console.log(req.params.id)
         const agent = await Agent.findByIdAndUpdate(
             { _id: req.params.id },
