@@ -21,3 +21,7 @@ Libraries are typically concerned with solving a narrow scope of problems. Frame
 One of the major differences between HTML and JSX is that in JSX, you must return a single parent element, or it won't compile. 
 In HTML, you are free to do whatever you want as you don’t have to return a single parent element. JSX allows javascript to be directly 
 incorporated into it.
+
+- What makes React attractive for our case?
+It's very popular and therefore has a ton of information and examples on the internet. The learning curve for React seems to be less 
+steep than in the case of AngularJS. 
