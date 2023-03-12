@@ -25,7 +25,6 @@ export default function Register({ history }) {
         const lastName = lastNameRef.current.value
         const email = emailRef.current.value
         const password = passwordRef.current.value
-        alert(`${firstName} ${lastName} ${email} ${password}`)
         register({
             first_name: firstName,
             last_name: lastName,
@@ -43,15 +42,19 @@ export default function Register({ history }) {
                 },
                 body: JSON.stringify(body),
             })
-            if (valid.status === 201) {
-                alert('valid')
-            } else {
-                alert('no bueno')
+            if (valid.status === 401) {
+                window.alert(`Email: '${emailRef.current.value}' is NOT unique! Cannot create user. Try again.`)
+                firstNameRef.current.value = ''
+                lastNameRef.current.value = ''
+                emailRef.current.value = ''
+                passwordRef.current.value = ''
+            } else if (valid.status === 201) {
+                window.alert(`User created. Please login.`)
+                history.push('/login')
             }
         } catch (error) {
-            window.alert(error)
+            console.error(error)
         }
-        history.push('/login')
     }
 
     return (
@@ -111,9 +114,6 @@ export default function Register({ history }) {
                             Submit
                         </button>
                     </div>
-                    <p className="text-center mt-2">
-                        Forgot <a href="/">password?</a>
-                    </p>
                 </div>
             </form>
         </div>

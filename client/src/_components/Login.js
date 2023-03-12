@@ -26,9 +26,14 @@ export default function Login({ history }) {
         const username = emailRef.current.value
         const password = passwordRef.current.value
         try {
-            await userActions.login(username, password)
+            const data = await userActions.login(username, password)
             history.push('/')
         } catch (err) {
+            if (err === 'Unauthorized') {
+                window.alert('Login NOT accepted. Try again.')
+                emailRef.current.value = ''
+                passwordRef.current.value = ''
+            }
             console.error(err)
         }
 
@@ -96,9 +101,6 @@ export default function Login({ history }) {
                             Submit
                         </button>
                     </div>
-                    <p className="text-center mt-2">
-                        Forgot <a href="/">password?</a>
-                    </p>
                 </div>
             </form>
         </div>

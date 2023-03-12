@@ -7,7 +7,7 @@ const createUser = async (req, res) => {
     } catch (err) {
         if (err.code === 11000 && err.keyPattern.email === 1) {
             const msg = `Email: ${err.keyValue.email} is NOT unique! Cannot create user.`
-            res.status(400).json(msg)
+            res.status(401).json(msg)
         } else {
             console.error(err)
             res.status(500).json(err)
