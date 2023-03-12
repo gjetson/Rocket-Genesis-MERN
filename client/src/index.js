@@ -1,23 +1,19 @@
-import React from "react"
-import ReactDOM from 'react-dom/client'
-import App from "./App"
-import { BrowserRouter } from "react-router-dom"
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { RecoilRoot } from 'recoil'
 
-const el = document.getElementById('root')
-const root = ReactDOM.createRoot(el)
-root.render(
+import './index.css'
+import { App } from './App'
+
+// setup fake backend
+//import { fakeBackend } from './_helpers';
+//fakeBackend();
+
+ReactDOM.render(
     <React.StrictMode>
-        <BrowserRouter>
+        <RecoilRoot>
             <App />
-        </BrowserRouter>
-    </React.StrictMode>
+        </RecoilRoot>
+    </React.StrictMode>,
+    document.getElementById('app')
 )
-
-
-// ReactDOM.render(
-//     <React.StrictMode>
-//         <BrowserRouter>
-//             <App />
-//         </BrowserRouter>
-//     </React.StrictMode>,
-//     document.getElementById("root")

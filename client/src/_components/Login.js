@@ -1,48 +1,65 @@
 import '../css/App.css'
 
-import React, { useRef } from "react"
-import { useNavigate } from "react-router"
+import React, { useEffect, useRef } from "react"
 
-export default function (props) {
-    const navigate = useNavigate()
+import { authAtom } from '_state'
+import { useUserActions } from '_actions'
+import { useRecoilValue } from 'recoil'
+
+export default function Login({ history }) {
+    const auth = useRecoilValue(authAtom)
+    const userActions = useUserActions()
 
     const emailRef = useRef()
     const passwordRef = useRef()
 
-    const handleSubmit = (event) => {
+    useEffect(() => {
+        // redirect to home if already logged in
+        if (auth) history.push('/')
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    const handleSubmit = async (event) => {
         event.preventDefault()
-        const email = emailRef.current.value
+        console.log('submit')
+        const username = emailRef.current.value
         const password = passwordRef.current.value
+        try {
+            await userActions.login(username, password)
+            history.push('/')
+        } catch (err) {
+            console.error(err)
+        }
+
         //alert(`${email} ${password}`)
-        login({
-            email: email,
-            password: password
-        })
+        // login({
+        //     email: email,
+        //     password: password
+        // })
     }
 
-    const login = async (body) => {
-        try {
-            const valid = await fetch("http://localhost:3004/user/verify", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(body),
-            })
-            console.log(valid)
-            if (valid.status === 201) {
-                console.log('logged in')
-                // set auth token
-                navigate("/")
-            } else {
-                console.log('no bueno')
-                navigate("/login")
-            }
-        } catch (error) {
-            console.error(error)
-            window.alert(error)
-        }
-    }
+    // const login = async (body) => {
+    //     try {
+    //         const valid = await fetch("http://localhost:3004/user/verify", {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //             body: JSON.stringify(body),
+    //         })
+    //         console.log(valid)
+    //         if (valid.status === 201) {
+    //             console.log('logged in')
+    //         } else {
+    //             window.alert('Login NOT accepted. Try again.')
+    //             navigate("/")
+    //         }
+    //     } catch (error) {
+    //         console.error(error)
+    //         window.alert(error)
+    //     }
+    // }
 
     return (
         <div className="Auth-form-container">
@@ -86,5 +103,4 @@ export default function (props) {
             </form>
         </div>
     )
-
 }

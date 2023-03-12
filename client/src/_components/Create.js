@@ -1,77 +1,47 @@
-import React, { useState, useEffect } from "react"
-import { useParams, useNavigate } from "react-router"
+import React, { useState } from "react"
 
-export default function Edit() {
-    const [form, setForm] = useState({
-        first_name: "",
-        last_name: "",
-        email: "",
-        region: "",
-        rating: "",
-        fee: "",
-        sales: "",
-        agents: [],
-    })
-    const params = useParams()
-    const navigate = useNavigate()
+const agentForm = { first_name: "", last_name: "", email: "", region: "", rating: "", fee: "", sales: "" }
 
-    useEffect(() => {
-        async function fetchData() {
-            const response = await fetch(`http://localhost:3004/agent/${params.id}`)
+export default function Create({ history }) {
+    const [form, setForm] = useState(agentForm)
 
-            if (!response.ok) {
-                const message = `An error has occurred: ${response.statusText}`
-                window.alert(message)
-                return
-            }
-            const agent = await response.json()
-            if (!agent) {
-                window.alert(`Agent with id ${params.id} not found`)
-                navigate("/")
-                return
-            }
-            setForm(agent)
-        }
-        fetchData()
-        return
-    }, [params.id, navigate])
-
-    // These methods will update the state properties.
+    // update state properties
     function updateForm(value) {
         return setForm((prev) => {
             return { ...prev, ...value }
         })
     }
+
+    // handle submission
     async function onSubmit(e) {
         e.preventDefault()
-        const editedAgent = {
-            first_name: form.first_name,
-            last_name: form.last_name,
-            email: form.email,
-            region: form.region,
-            rating: form.rating,
-            fee: form.fee,
-            sales: form.sales
+
+        // insert new agent
+        const newAgent = { ...form }
+        try {
+            await fetch("http://localhost:3004/agent", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(newAgent),
+            })
+        } catch (error) {
+            console.error(error)
+            window.alert(error)
+            return
         }
 
-        // This will send a post request to update the data in the database.
-        await fetch(`http://localhost:3004/agent/update/${params.id}`, {
-            method: "POST",
-            body: JSON.stringify(editedAgent),
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        })
-
-        navigate("/")
+        setForm(agentForm)
+        history.push('/')
     }
-    // display the update form
+
     return (
         <div>
-            <h3>Update Agent</h3>
+            <h3>Create New Agent</h3>
             <form onSubmit={onSubmit}>
                 <div className="form-group">
-                    <label htmlFor="name">First Name: </label>
+                    <label htmlFor="first_name">First Name</label>
                     <input
                         type="text"
                         className="form-control"
@@ -81,7 +51,7 @@ export default function Edit() {
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="position">Last Name: </label>
+                    <label htmlFor="last_name">Last Name</label>
                     <input
                         type="text"
                         className="form-control"
@@ -91,7 +61,7 @@ export default function Edit() {
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="position">Email: </label>
+                    <label htmlFor="email">Email</label>
                     <input
                         type="text"
                         className="form-control"
@@ -150,7 +120,7 @@ export default function Edit() {
                         <label htmlFor="regionWest" className="form-check-label">West</label>
                     </div>
                     <div className="form-group">
-                        <label htmlFor="position">Rating: </label>
+                        <label htmlFor="rating">Rating</label>
                         <input
                             type="text"
                             className="form-control"
@@ -160,7 +130,7 @@ export default function Edit() {
                         />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="position">Fee: </label>
+                        <label htmlFor="fee">Fee</label>
                         <input
                             type="text"
                             className="form-control"
@@ -170,7 +140,7 @@ export default function Edit() {
                         />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="position">Sales: </label>
+                        <label htmlFor="sales">Sales</label>
                         <input
                             type="text"
                             className="form-control"
@@ -180,11 +150,10 @@ export default function Edit() {
                         />
                     </div>
                 </div>
-                <br />
                 <div className="form-group">
                     <input
                         type="submit"
-                        value="Update Agent"
+                        value="Create agent"
                         className="btn btn-primary"
                     />
                 </div>

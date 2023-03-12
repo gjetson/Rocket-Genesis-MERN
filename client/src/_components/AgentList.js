@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 
-
 const Agent = (props) => (
     <tr>
         <td>{props.agent.first_name}</td>
@@ -46,10 +45,13 @@ export default function AgentList() {
     }, [agents.length])
 
     async function deleteAgent(id) {
-        await fetch(`http://localhost:3004/agent/delete/${id}`, {
-            method: "DELETE"
-        })
-
+        try {
+            await fetch(`http://localhost:3004/agent/delete/${id}`, {
+                method: "DELETE"
+            })
+        } catch (err) {
+            console.error(err)
+        }
         const newAgents = agents.filter((el) => el._id !== id)
         setAgents(newAgents)
     }
@@ -66,7 +68,6 @@ export default function AgentList() {
         })
     }
 
-    // This following section will display the table with the records of individuals.
     return (
         <div>
             <h3>Agent List</h3>

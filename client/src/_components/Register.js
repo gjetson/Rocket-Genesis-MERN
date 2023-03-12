@@ -1,15 +1,23 @@
 import '../css/App.css'
 
-import React, { useRef } from "react"
-import { useNavigate } from "react-router"
+import React, { useEffect, useRef } from "react"
+import { authAtom } from '_state'
+import { useRecoilValue } from 'recoil'
 
-export default function (props) {
-    const navigate = useNavigate()
+export default function Register({ history }) {
+    const auth = useRecoilValue(authAtom)
 
     const firstNameRef = useRef()
     const lastNameRef = useRef()
     const emailRef = useRef()
     const passwordRef = useRef()
+
+    useEffect(() => {
+        // redirect to home if already logged in
+        if (auth) history.push('/')
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const handleSubmit = (event) => {
         event.preventDefault()
@@ -37,15 +45,15 @@ export default function (props) {
             })
             if (valid.status === 201) {
                 alert('valid')
-                navigate("/login")
             } else {
                 alert('no bueno')
-                navigate("/login")
             }
         } catch (error) {
             window.alert(error)
         }
+        history.push('/login')
     }
+
     return (
         <div className="Auth-form-container">
             <form className="Auth-form" onSubmit={handleSubmit}>
