@@ -21,7 +21,7 @@ function useFetchWrapper() {
             const requestOptions = {
                 method,
                 //headers: authHeader(url)
-                headers: {}
+                headers: { authorization: 'rocket' }
             }
             if (body) {
                 requestOptions.headers['Content-Type'] = 'application/json'

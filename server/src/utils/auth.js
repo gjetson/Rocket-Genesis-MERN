@@ -12,6 +12,7 @@ const setActive = (env) => {
 
 const isAuth = (req, res, next) => {
     if (active) {
+        console.log(req.headers)
         const auth = req.headers.authorization
         if (auth === 'rocket') {
             next()

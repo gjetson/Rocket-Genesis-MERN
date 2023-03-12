@@ -20,8 +20,8 @@ const AgentSchema = mongoose.Schema({
             if (!validator.isEmail(val)) {
                 throw new Error('Email is invalid.')
             }
-        }
-        // unique: true
+        },
+        unique: true
     },
     region: {
         type: String,

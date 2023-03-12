@@ -4,11 +4,12 @@ const { filterUpdates } = require('./utils')
 const createAgent = async (req, res) => {
     try {
         const agent = await Agent.create(req.body)
+        console.log(agent)
         res.status(201).json(agent)
     } catch (err) {
         if (err.code === 11000 && err.keyPattern.email === 1) {
             const msg = `Email: ${err.keyValue.email} is NOT unique! Cannot create agent.`
-            res.status(400).json(msg)
+            res.status(401).json(msg)
         } else {
             console.error(err)
             res.status(500).json(err)

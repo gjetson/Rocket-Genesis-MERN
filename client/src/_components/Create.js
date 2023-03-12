@@ -19,23 +19,28 @@ export default function Create({ history }) {
         // insert new agent
         const newAgent = { ...form }
         try {
-            await fetch("http://localhost:3004/agent", {
+            const valid = await fetch("http://localhost:3004/agent", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(newAgent),
             })
+            console.log(valid.status)
+            if (valid.status === 401) {
+                window.alert(`Email: '${newAgent.email}' is NOT unique! Cannot create agent with that email. Try again.`)
+                form.email = ''
+            } else if (valid.status === 201) {
+                window.alert(`Agent created.`)
+                setForm(agentForm)
+                history.push('/')
+            }
         } catch (error) {
             console.error(error)
             window.alert(error)
             return
         }
-
-        setForm(agentForm)
-        history.push('/')
     }
-
     return (
         <div>
             <h3>Create New Agent</h3>
