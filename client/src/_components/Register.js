@@ -4,6 +4,9 @@ import React, { useEffect, useRef } from "react"
 import { authAtom } from '_state'
 import { useRecoilValue } from 'recoil'
 
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 export default function Register({ history }) {
     const auth = useRecoilValue(authAtom)
 
@@ -19,17 +22,20 @@ export default function Register({ history }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    const clearForm = () => {
+        firstNameRef.current.value = ''
+        lastNameRef.current.value = ''
+        emailRef.current.value = ''
+        passwordRef.current.value = ''
+    }
+
     const handleSubmit = (event) => {
         event.preventDefault()
-        const firstName = firstNameRef.current.value
-        const lastName = lastNameRef.current.value
-        const email = emailRef.current.value
-        const password = passwordRef.current.value
         register({
-            first_name: firstName,
-            last_name: lastName,
-            email: email,
-            password: password
+            first_name: firstNameRef.current.value,
+            last_name: lastNameRef.current.value,
+            email: emailRef.current.value,
+            password: passwordRef.current.value
         })
     }
 
@@ -42,15 +48,12 @@ export default function Register({ history }) {
                 },
                 body: JSON.stringify(body),
             })
-            if (valid.status === 401) {
-                window.alert(`Email: '${emailRef.current.value}' is NOT unique! Cannot create user. Try again.`)
-                firstNameRef.current.value = ''
-                lastNameRef.current.value = ''
-                emailRef.current.value = ''
-                passwordRef.current.value = ''
+            console.log(valid)
+            if (valid && valid.status === 401) {
+                toast.error(`Email: '${emailRef.current.value}' is NOT unique! Cannot create user. Try again.`, { onClose: clearForm })
             } else if (valid.status === 201) {
-                window.alert(`User created. Please login.`)
-                history.push('/login')
+                toast.success('User created. Please login.', { onClose: () => { history.push('/login') } })
+
             }
         } catch (error) {
             console.error(error)
@@ -116,6 +119,10 @@ export default function Register({ history }) {
                     </div>
                 </div>
             </form>
+            <ToastContainer
+                position="top-center"
+                theme="colored"
+            />
         </div>
     )
 }

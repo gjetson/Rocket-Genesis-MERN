@@ -1,6 +1,7 @@
 import '../css/App.css'
 
 import React, { useEffect, useRef } from "react"
+import { Link } from 'react-router-dom'
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -15,6 +16,11 @@ export default function Login({ history }) {
 
     const emailRef = useRef()
     const passwordRef = useRef()
+
+    const clearForm = () => {
+        emailRef.current.value = ''
+        passwordRef.current.value = ''
+    }
 
     useEffect(() => {
         // redirect to home if already logged in
@@ -34,11 +40,11 @@ export default function Login({ history }) {
             history.push('/')
         } catch (err) {
             if (err === 'Unauthorized') {
-                toast.error('Login NOT accepted. Try again.')
-                emailRef.current.value = ''
-                passwordRef.current.value = ''
+                toast.error('Login NOT accepted. Try again.', { onClose: clearForm })
+            } else {
+                console.error(err)
+
             }
-            console.error(err)
         }
 
         //alert(`${email} ${password}`)
