@@ -2,6 +2,9 @@ import '../css/App.css'
 
 import React, { useEffect, useRef } from "react"
 
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 import { authAtom } from '_state'
 import { useUserActions } from '_actions'
 import { useRecoilValue } from 'recoil'
@@ -27,10 +30,11 @@ export default function Login({ history }) {
         const password = passwordRef.current.value
         try {
             const data = await userActions.login(username, password)
+            console.log(data)
             history.push('/')
         } catch (err) {
             if (err === 'Unauthorized') {
-                window.alert('Login NOT accepted. Try again.')
+                toast.error('Login NOT accepted. Try again.')
                 emailRef.current.value = ''
                 passwordRef.current.value = ''
             }
@@ -103,6 +107,10 @@ export default function Login({ history }) {
                     </div>
                 </div>
             </form>
+            <ToastContainer
+                position="top-center"
+                theme="colored"
+            />
         </div>
     )
 }
