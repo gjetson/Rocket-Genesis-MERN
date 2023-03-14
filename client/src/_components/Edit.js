@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react"
 import { useParams } from "react-router"
 
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 export default function Edit({ history }) {
     const [form, setForm] = useState({
         first_name: "",
@@ -51,19 +54,33 @@ export default function Edit({ history }) {
             sales: form.sales
         }
         console.log(editedAgent)
-        // post request to update the data in the database.
         try {
-            await fetch(`http://localhost:3004/agent/update/${params.id}`, {
+            const valid = await fetch(`http://localhost:3004/agent/update/${params.id}`, {
                 method: "POST",
                 body: JSON.stringify(editedAgent),
                 headers: {
                     'Content-Type': 'application/json'
                 },
             })
+            if (valid) {
+                if (valid.status === 201) {
+                    toast.success('Agent updated.', {
+                        onClose: () => {
+                            history.push('/')
+                        }
+                    })
+                } else if (valid.status === 401) {
+                    toast.error(`Email: ${editedAgent.email} is NOT unique! Please enter a unique email.`, {
+                        onClose: () => {
+                            editedAgent.email = ''
+                            setForm(editedAgent)
+                        }
+                    })
+                }
+            }
         } catch (err) {
             console.error(err)
         }
-        history.push("/")
     }
     return (
         <div>
@@ -77,6 +94,7 @@ export default function Edit({ history }) {
                         id="first_name"
                         value={form.first_name}
                         onChange={(e) => updateForm({ first_name: e.target.value })}
+                        required
                     />
                 </div>
                 <div className="form-group">
@@ -87,16 +105,18 @@ export default function Edit({ history }) {
                         id="last_name"
                         value={form.last_name}
                         onChange={(e) => updateForm({ last_name: e.target.value })}
+                        required
                     />
                 </div>
                 <div className="form-group">
                     <label htmlFor="email">Email: </label>
                     <input
-                        type="text"
+                        type="email"
                         className="form-control"
                         id="email"
                         value={form.email}
                         onChange={(e) => updateForm({ email: e.target.value })}
+                        required
                     />
                 </div>
                 <div className="form-group">
@@ -188,6 +208,10 @@ export default function Edit({ history }) {
                     />
                 </div>
             </form>
+            <ToastContainer
+                position="top-center"
+                theme="colored"
+            />
         </div>
     )
 }

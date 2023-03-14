@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 const Agent = (props) => (
     <tr>
         <td>{props.agent.first_name}</td>
@@ -46,14 +49,20 @@ export default function AgentList() {
 
     async function deleteAgent(id) {
         try {
-            await fetch(`http://localhost:3004/agent/delete/${id}`, {
+            const valid = await fetch(`http://localhost:3004/agent/delete/${id}`, {
                 method: "DELETE"
             })
+            if (valid && valid.status === 200) {
+                toast.success('User deleted.', {
+                    onClose: () => {
+                        const newAgents = agents.filter((el) => el._id !== id)
+                        setAgents(newAgents)
+                    }
+                })
+            }
         } catch (err) {
             console.error(err)
         }
-        const newAgents = agents.filter((el) => el._id !== id)
-        setAgents(newAgents)
     }
 
     function agentList() {
@@ -85,6 +94,10 @@ export default function AgentList() {
                 </thead>
                 <tbody>{agentList()}</tbody>
             </table>
+            <ToastContainer
+                position="top-center"
+                theme="colored"
+            />
         </div>
     )
 }

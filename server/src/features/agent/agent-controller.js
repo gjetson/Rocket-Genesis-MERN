@@ -4,10 +4,11 @@ const { filterUpdates } = require('./utils')
 const createAgent = async (req, res) => {
     try {
         const agent = await Agent.create(req.body)
-        console.log(agent)
+        // console.log(agent)
         res.status(201).json(agent)
     } catch (err) {
         if (err.code === 11000 && err.keyPattern.email === 1) {
+            console.error(err)
             const msg = `Email: ${err.keyValue.email} is NOT unique! Cannot create agent.`
             res.status(401).json(msg)
         } else {
@@ -50,29 +51,31 @@ const getAgentsByRegion = async (req, res) => {
 const updateAgent = async (req, res) => {
     try {
         const filtered = filterUpdates(req.body)
-        console.log(filtered)
-        console.log(req.params.id)
         const agent = await Agent.findByIdAndUpdate(
             { _id: req.params.id },
             filtered,
             { new: true, upsert: false })
         if (agent) {
-            res.status(200).json(agent)
+            res.status(201).json(agent)
         }
         else {
             res.status(404).json(`Agent not found for id: ${req.params.id}`)
         }
     } catch (err) {
-        console.error(err)
-        res.status(500).json(err)
+        if (err.code === 11000 && err.keyPattern.email === 1) {
+            console.error(err)
+            const msg = `Email: ${err.keyValue.email} is NOT unique! Cannot create agent.`
+            res.status(401).json(msg)
+        } else {
+            console.error(err)
+            res.status(500).json(err)
+        }
     }
 }
 
 const deleteAgent = async (req, res) => {
     try {
-        // console.log(req.params.id)
         const agent = await Agent.findByIdAndDelete(req.params.id)
-        // console.log("agent: ", agent)
         if (agent) {
             res.status(200).json(agent)
         }

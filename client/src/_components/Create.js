@@ -1,6 +1,9 @@
 import React, { useState } from "react"
 
-const agentForm = { first_name: "", last_name: "", email: "", region: "", rating: "", fee: "", sales: "" }
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
+const agentForm = { first_name: "", last_name: "", email: "", region: "north", rating: "", fee: "", sales: "" }
 
 export default function Create({ history }) {
     const [form, setForm] = useState(agentForm)
@@ -27,13 +30,15 @@ export default function Create({ history }) {
                 body: JSON.stringify(newAgent),
             })
             console.log(valid.status)
-            if (valid.status === 401) {
-                window.alert(`Email: '${newAgent.email}' is NOT unique! Cannot create agent with that email. Try again.`)
-                form.email = ''
+            if (valid && valid.status === 401) {
+                toast.error(`Email: '${newAgent.email}' is NOT unique! Cannot create agent with that email. Try again.`, { onClose: () => { form.email = '' } })
             } else if (valid.status === 201) {
-                window.alert(`Agent created.`)
-                setForm(agentForm)
-                history.push('/')
+                toast.success(`Agent created.`, {
+                    onClose: () => {
+                        setForm(agentForm)
+                        history.push('/')
+                    }
+                })
             }
         } catch (error) {
             console.error(error)
@@ -163,6 +168,10 @@ export default function Create({ history }) {
                     />
                 </div>
             </form>
+            <ToastContainer
+                position="top-center"
+                theme="colored"
+            />
         </div>
     )
 }
