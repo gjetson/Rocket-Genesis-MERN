@@ -31,7 +31,7 @@ export default function Create({ history }) {
             })
             console.log(valid.status)
             if (valid && valid.status === 401) {
-                toast.error(`Email: '${newAgent.email}' is NOT unique! Cannot create agent with that email. Try again.`, { onClose: () => { form.email = '' } })
+                toast.error(`Email: '${newAgent.email}' is NOT unique! Cannot create agent with that email. Try again.`, {})
             } else if (valid.status === 201) {
                 toast.success(`Agent created.`, {
                     onClose: () => {

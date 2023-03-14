@@ -3,6 +3,9 @@ import { Link } from "react-router-dom"
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { confirmAlert } from "react-confirm-alert"
+import "react-confirm-alert/src/react-confirm-alert.css"
+import Confirm from './Confirm'
 
 const Agent = (props) => (
     <tr>
@@ -47,6 +50,17 @@ export default function AgentList() {
         return
     }, [agents.length])
 
+
+    const confirmDelete = (id) => {
+        confirmAlert({
+            customUI: ({ onClose }) => {
+                return (
+                    <Confirm msg={'delete'} onClose={onClose} onConfirm={() => { deleteAgent(id); onClose() }} />
+                )
+            }
+        })
+    }
+
     async function deleteAgent(id) {
         try {
             const valid = await fetch(`http://localhost:3004/agent/delete/${id}`, {
@@ -70,7 +84,7 @@ export default function AgentList() {
             return (
                 <Agent
                     agent={agent}
-                    deleteAgent={() => deleteAgent(agent._id)}
+                    deleteAgent={() => confirmDelete(agent._id)}
                     key={agent._id}
                 />
             )

@@ -3,6 +3,9 @@ import { useParams } from "react-router"
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { confirmAlert } from "react-confirm-alert"
+import "react-confirm-alert/src/react-confirm-alert.css"
+import Confirm from './Confirm'
 
 export default function Edit({ history }) {
     const [form, setForm] = useState({
@@ -42,12 +45,24 @@ export default function Edit({ history }) {
         })
     }
 
-    async function onSubmit(e) {
+    function onSubmit(e) {
         e.preventDefault()
+
+        confirmAlert({
+            customUI: ({ onClose }) => {
+                return (
+                    <Confirm msg={'update'} onClose={onClose} onConfirm={() => { editAgent(); onClose() }} />
+                )
+            }
+        })
+    }
+
+
+    const editAgent = async () => {
         const editedAgent = {
             first_name: form.first_name,
             last_name: form.last_name,
-            email: form.email,
+            email: form.il,
             region: form.region,
             rating: form.rating,
             fee: form.fee,
@@ -82,6 +97,8 @@ export default function Edit({ history }) {
             console.error(err)
         }
     }
+
+
     return (
         <div>
             <h3>Update Agent</h3>
