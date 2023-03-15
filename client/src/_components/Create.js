@@ -8,18 +8,14 @@ const agentForm = { first_name: "", last_name: "", email: "", region: "north", r
 export default function Create({ history }) {
     const [form, setForm] = useState(agentForm)
 
-    // update state properties
     function updateForm(value) {
         return setForm((prev) => {
             return { ...prev, ...value }
         })
     }
-
-    // handle submission
     async function onSubmit(e) {
         e.preventDefault()
 
-        // insert new agent
         const newAgent = { ...form }
         try {
             const valid = await fetch("http://localhost:3004/agent", {
@@ -31,7 +27,12 @@ export default function Create({ history }) {
             })
             console.log(valid.status)
             if (valid && valid.status === 401) {
-                toast.error(`Email: '${newAgent.email}' is NOT unique! Cannot create agent with that email. Try again.`, {})
+                toast.error(`Email: '${newAgent.email}' is NOT unique! Cannot create agent with that email. Try again.`, {
+                    onClose: () => {
+                        newAgent.email = ''
+                        setForm(newAgent)
+                    }
+                })
             } else if (valid.status === 201) {
                 toast.success(`Agent created.`, {
                     onClose: () => {
