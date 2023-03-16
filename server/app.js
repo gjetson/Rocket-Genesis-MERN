@@ -15,6 +15,7 @@ const AgentRoutes = require('./src/routes/agent-routes')
 const RegionRoutes = require('./src/routes/region-routes')
 const UserRoutes = require('./src/routes/user-routes')
 const SessionRoutes = require('./src/routes/session-routes')
+const TransactionRoutes = require('./src/routes/transaction-routes')
 
 const { setAuth, isAuth } = require('./src/utils/auth')
 setAuth(process.env)
@@ -31,6 +32,7 @@ AgentRoutes.registerAgentRoutes(app)
 RegionRoutes.registerRegionRoutes(app)
 UserRoutes.registerUserRoutes(app)
 SessionRoutes.registerSessionRoutes(app)
+TransactionRoutes.registerTransactionRoutes(app)
 
 MongoManager.openMongoConnection(process.env.MONGO_URI)
 
