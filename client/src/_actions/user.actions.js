@@ -15,14 +15,16 @@ function useUserActions() {
         console.log('URL: ', url)
         return fetchWrapper.post(url, { username, password })
             .then(user => {
-                console.log('user: ', JSON.stringify(user))
+                const usr =
+                    console.log('user: ', user)
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('user', JSON.stringify(user))
-                setAuth(user)
+                setAuth(JSON.stringify(user))
 
                 // get return url from location state or default to home page
                 const { from } = history.location.state || { from: { pathname: '/' } }
                 history.push(from)
+                return user
             })
     }
 
