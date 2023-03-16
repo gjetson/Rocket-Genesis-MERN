@@ -14,10 +14,11 @@ const HealthRoutes = require('./src/routes/health.routes')
 const AgentRoutes = require('./src/routes/agent-routes')
 const RegionRoutes = require('./src/routes/region-routes')
 const UserRoutes = require('./src/routes/user-routes')
+const SessionRoutes = require('./src/routes/session-routes')
 
-
-const { setActive } = require('./src/utils/auth')
-setActive(process.env)
+const { setAuth, isAuth } = require('./src/utils/auth')
+setAuth(process.env)
+app.use(isAuth)
 
 app.use(cors())
 app.use(Express.json())
@@ -29,6 +30,7 @@ HealthRoutes.registerHealthRoutes(app)
 AgentRoutes.registerAgentRoutes(app)
 RegionRoutes.registerRegionRoutes(app)
 UserRoutes.registerUserRoutes(app)
+SessionRoutes.registerSessionRoutes(app)
 
 MongoManager.openMongoConnection(process.env.MONGO_URI)
 

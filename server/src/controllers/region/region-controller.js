@@ -47,34 +47,5 @@ const getAllStars = async (req, res) => {
     }
 }
 
-// const getAllStars = async (req, res) => {
-//     try {
-//         const match = [
-//             {
-//                 $lookup: {
-//                     from: 'agents',
-//                     localField: 'top_agents',
-//                     foreignField: '_id',
-//                     as: 'topAgents'
-//                 }
-//             },
-//             { $unwind: '$topAgents' },
-//             {
-//                 $project: {
-//                     region: 1,
-//                     topAgents: { sales: $max }
-//                 }
-//             }
-//         ]
-//         const region = await Region.find({ region: req.params.region }).populate('top_agents')
-//         console.log(region)
-//         const stars = region[0].top_agents.sort((a, b) => (a.sales > b.sales) ? -1 : 1)
-//         res.status(200).json({ data: stars[0] })
-//     } catch (err) {
-//         console.error(err)
-//         res.status(500).send({ error: err })
-//     }
-// }
-
 
 module.exports = { createRegion, getRegions, getAllStars }

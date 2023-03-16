@@ -90,9 +90,9 @@ const deleteUser = async (req, res) => {
     } catch (err) {
         if (err.kind === 'ObjectId' && err.name === 'CastError') {
             const msg = `'${req.params.id}' is not an ID. It must be a string of 12 bytes or 24 hex characters or an integer.`
-            res.status(500).send({ error: msg })
+            res.status(500).json({ error: msg })
         } else {
-            res.status(500).send({ error: err })
+            res.status(500).json({ error: err })
         }
     }
 }

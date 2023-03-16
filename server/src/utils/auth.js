@@ -1,6 +1,6 @@
 let active = true
 
-const setActive = (env) => {
+const setAuth = (env) => {
     if (env.AUTH === '0') {
         console.log('Basic authorization disabled.')
         active = false
@@ -25,4 +25,4 @@ const isAuth = (req, res, next) => {
     }
 }
 
-module.exports = { isAuth, setActive }
+module.exports = { isAuth, setAuth }
