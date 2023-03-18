@@ -1,12 +1,35 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { getCookie } from 'react-use-cookie'
+import { useUserActions } from '_actions'
+
 
 const agentForm = { first_name: "", last_name: "", email: "", region: "north", rating: "", fee: "", sales: "" }
 
 export default function Create({ history }) {
+    const userActions = useUserActions()
     const [form, setForm] = useState(agentForm)
+
+    useEffect(() => {
+        // redirect to login if already logged in
+        async function authSession() {
+            const sesh = getCookie('token')
+            if (sesh === '0') {
+                console.log('Create sesh: ', sesh)
+                history.push('/login')
+                return
+            }
+            const valid = await userActions.authSession(sesh)
+            console.log('Create auth: ', valid)
+            if (!valid) {
+                history.push('/login')
+            }
+        }
+
+        authSession()
+    }, [])
 
     function updateForm(value) {
         return setForm((prev) => {
@@ -37,7 +60,7 @@ export default function Create({ history }) {
                 toast.success(`Agent created.`, {
                     onClose: () => {
                         setForm(agentForm)
-                        history.push('/')
+                        history.push('/agents')
                     }
                 })
             }

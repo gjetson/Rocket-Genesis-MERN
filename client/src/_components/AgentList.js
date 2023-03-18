@@ -6,6 +6,8 @@ import 'react-toastify/dist/ReactToastify.css'
 import { confirmAlert } from "react-confirm-alert"
 import "react-confirm-alert/src/react-confirm-alert.css"
 import Confirm from './Confirm'
+import { getCookie } from 'react-use-cookie'
+import { useUserActions } from '_actions'
 
 const Agent = (props) => (
     <tr>
@@ -28,25 +30,41 @@ const Agent = (props) => (
     </tr>
 )
 
-export default function AgentList() {
+export default function AgentList({ history }) {
     const [agents, setAgents] = useState([])
+    const userActions = useUserActions()
+
+    useEffect(() => {
+        async function authSession() {
+            const sesh = getCookie('token')
+            if (sesh === '0') {
+                console.log('Login sesh: ', sesh)
+                history.push('/login')
+                return
+            }
+            const valid = await userActions.authSession(sesh)
+            console.log('AgentsList auth: ', valid)
+            if (!valid) {
+                history.push('/login')
+            }
+        }
+        authSession()
+    }, [])
 
     useEffect(() => {
         async function getAgents() {
-            const response = await fetch(`http://localhost:3004/agents/`)
-
-            if (!response.ok) {
-                const message = `An error occurred: ${response.statusText}`
-                window.alert(message)
-                return
+            try {
+                const response = await fetch(`http://localhost:3004/agents/`)
+                if (!response.ok) {
+                    throw new Error(`An error occurred: ${response.statusText}`)
+                }
+                const data = await response.json()
+                setAgents(data)
+            } catch (err) {
+                console.error(err)
             }
-
-            const data = await response.json()
-            setAgents(data)
         }
-
         getAgents()
-
         return
     }, [agents.length])
 

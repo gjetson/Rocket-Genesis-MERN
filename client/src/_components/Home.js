@@ -1,7 +1,30 @@
-import React from 'react'
-import { Card, Button, CardTitle, CardText, Row, Col, CardImg } from 'reactstrap'
 
-const Home = (props) => {
+import React, { useEffect } from "react"
+import { Card, Button, CardTitle, CardText, Row, Col, CardImg } from 'reactstrap'
+import { getCookie } from 'react-use-cookie'
+import { useUserActions } from '_actions'
+
+const Home = ({ history }) => {
+  const userActions = useUserActions()
+  useEffect(() => {
+    // redirect to login if already logged in
+    async function authSession() {
+      const sesh = getCookie('token')
+      if (sesh === '0') {
+        console.log('Login sesh: ', sesh)
+        history.push('/login')
+        return
+      }
+      const valid = await userActions.authSession(sesh)
+      console.log('Home auth: ', valid)
+      if (!valid) {
+        history.push('/login')
+      }
+    }
+
+    authSession()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const getRandomInt = (max) => {
     return Math.floor(Math.random() * max)

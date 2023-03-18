@@ -12,6 +12,7 @@
         "react-router-dom-v5-compat": "^6.9.0",
         "react-scripts": "^5.0.1",
         "react-toastify": "^9.1.1",
+        "react-use-cookie": "^1.4.0",
         "reactstrap": "^9.1.6",
         "recoil": "^0.4.1"
     },

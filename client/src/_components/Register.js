@@ -3,22 +3,44 @@ import '../css/App.css'
 import React, { useEffect, useRef } from "react"
 import { authAtom } from '_state'
 import { useRecoilValue } from 'recoil'
+import { useUserActions } from '_actions'
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
+import { getCookie } from 'react-use-cookie'
+
 export default function Register({ history }) {
     const auth = useRecoilValue(authAtom)
+    const userActions = useUserActions()
 
     const firstNameRef = useRef()
     const lastNameRef = useRef()
     const emailRef = useRef()
     const passwordRef = useRef()
 
+    // useEffect(() => {
+    //     // redirect to home if already logged in
+    //     if (auth) history.push('/')
+
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [])
+
     useEffect(() => {
         // redirect to home if already logged in
-        if (auth) history.push('/')
-
+        async function authSession() {
+            const sesh = getCookie('token')
+            if (sesh === '0') {
+                console.log('Register sesh: ', sesh)
+                return
+            }
+            const valid = await userActions.authSession(sesh)
+            console.log('Register auth: ', valid)
+            if (valid) {
+                history.push('/')
+            }
+        }
+        authSession()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

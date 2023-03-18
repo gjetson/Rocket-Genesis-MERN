@@ -3,22 +3,47 @@ const { v4: uuidv4 } = require('uuid')
 
 const createSession = async (req, res) => {
     try {
-        const seshFoo = {
-            token: uuidv4(),
-            user: req.body.userId
+        const sesh = await createSessionByUserId(req.body.userId)
+        if (sesh) {
+            res.status(201).json(sesh)
+        } else {
+            throw new Error('Session not created.')
         }
-        console.log(seshFoo)
-        const sesh = await Session.create(seshFoo)
-        res.status(201).json(sesh)
     } catch (err) {
         console.error(err)
         res.status(500).json(err)
     }
 }
 
+const createSessionByUserId = async (userId) => {
+    const seshFoo = {
+        token: uuidv4(),
+        user: userId
+    }
+    console.log(seshFoo)
+    const sesh = await Session.create(seshFoo)
+    return sesh
+}
+
+const getSessionByUserId = async (userId) => {
+    try {
+        return await Session.findOne({ user: userId })
+    } catch (err) {
+        console.error(err)
+    }
+}
+
+const deleteSessionByUserId = async (userId) => {
+    try {
+        return await Session.deleteOne({ user: userId })
+    } catch (err) {
+        console.error(err)
+    }
+}
+
 const authenticateSession = async (req, res) => {
     try {
-        const sesh = await Session.findOne({ token: req.params.token }).populate('user')
+        const sesh = await Session.findOne({ token: req.params.token })
         if (sesh) {
             res.status(200).json(sesh)
         }
@@ -71,4 +96,4 @@ const deleteSession = async (req, res) => {
     }
 }
 
-module.exports = { createSession, authenticateSession, getSessions, getSession, deleteSession }
+module.exports = { createSession, createSessionByUserId, getSessionByUserId, authenticateSession, getSessions, getSession, deleteSession, deleteSessionByUserId }

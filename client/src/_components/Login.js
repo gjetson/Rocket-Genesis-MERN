@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { authAtom } from '_state'
 import { useUserActions } from '_actions'
 import { useRecoilValue } from 'recoil'
+import { getCookie } from 'react-use-cookie'
 
 export default function Login({ history }) {
     const auth = useRecoilValue(authAtom)
@@ -23,19 +24,30 @@ export default function Login({ history }) {
 
     useEffect(() => {
         // redirect to home if already logged in
-        if (auth) history.push('/')
-
+        async function authSession() {
+            const sesh = getCookie('token')
+            if (sesh === '0') {
+                console.log('Login sesh: ', sesh)
+                return
+            }
+            const valid = await userActions.authSession(sesh)
+            console.log('Login auth: ', valid)
+            if (valid) {
+                history.push('/')
+            }
+        }
+        authSession()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const handleSubmit = async (event) => {
         event.preventDefault()
-        console.log('submit')
         const username = emailRef.current.value
         const password = passwordRef.current.value
         try {
-            const data = await userActions.login(username, password)
-            console.log(data)
+            const sesh = await userActions.login(username, password)
+            console.log('session: ', sesh)
+            console.log('login cookie: ', getCookie('token'))
             history.push('/')
         } catch (err) {
             if (err === 'Unauthorized') {
@@ -46,11 +58,6 @@ export default function Login({ history }) {
             }
         }
 
-        //alert(`${email} ${password}`)
-        // login({
-        //     email: email,
-        //     password: password
-        // })
     }
 
     // const login = async (body) => {

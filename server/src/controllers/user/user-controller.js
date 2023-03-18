@@ -1,4 +1,5 @@
 const User = require('../../shared/db/models/user-model')
+const SessionConn = require('../../controllers/session/session-controller')
 
 const createUser = async (req, res) => {
     try {
@@ -21,8 +22,12 @@ const authenticateUser = async (req, res) => {
         if (user) {
             const valid = await user.verifyPassword(req.body.password)
             if (valid) {
-                console.log(valid)
-                res.status(201).json(user)
+                await SessionConn.deleteSessionByUserId(user._id)
+                const sesh = await SessionConn.createSessionByUserId(user._id)
+                if (sesh) {
+                    console.log('Session: ', sesh)
+                    res.status(201).json(sesh)
+                }
             } else {
                 res.status(401).json({ msg: "false" })
             }

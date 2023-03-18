@@ -6,8 +6,13 @@ import 'react-toastify/dist/ReactToastify.css'
 import { confirmAlert } from "react-confirm-alert"
 import "react-confirm-alert/src/react-confirm-alert.css"
 import Confirm from './Confirm'
+import { getCookie } from 'react-use-cookie'
+import { useUserActions } from '_actions'
+
 
 export default function Edit({ history }) {
+    const userActions = useUserActions()
+
     const [form, setForm] = useState({
         first_name: "",
         last_name: "",
@@ -19,6 +24,24 @@ export default function Edit({ history }) {
         agents: [],
     })
     const params = useParams()
+
+    useEffect(() => {
+        async function authSession() {
+            const sesh = getCookie('token')
+            if (sesh === '0') {
+                console.log('Edit sesh: ', sesh)
+                history.push('/login')
+                return
+            }
+            const valid = await userActions.authSession(sesh)
+            console.log('Edit auth: ', valid)
+            if (!valid) {
+                history.push('/login')
+            }
+        }
+        authSession()
+        return
+    }, [params.id])
 
     useEffect(() => {
         async function fetchData() {
@@ -81,7 +104,7 @@ export default function Edit({ history }) {
                 if (valid.status === 201) {
                     toast.success('Agent updated.', {
                         onClose: () => {
-                            history.push('/')
+                            history.push('/agents')
                         }
                     })
                 } else if (valid.status === 401) {
