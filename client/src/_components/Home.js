@@ -35,8 +35,8 @@ const Home = ({ history }) => {
         <Col sm="6">
           <Card body>
             <CardImg top width="100%" src={`https://picsum.photos/seed/${getRandomInt(100)}/300/200`} alt="image cap" />
-            <CardTitle>Special Title Treatment</CardTitle>
-            <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
+            <CardTitle>Agent List</CardTitle>
+            <CardText>Agent information and stats.</CardText>
             <a href="/agents">
               <Button>Agents</Button>
             </a>
@@ -45,9 +45,9 @@ const Home = ({ history }) => {
         <Col sm="6">
           <Card body>
             <CardImg top width="100%" src={`https://picsum.photos/seed/${getRandomInt(100)}/300/200`} alt="image cap" />
-            <CardTitle>Special Title Treatment</CardTitle>
-            <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
-            <a href="/agents">
+            <CardTitle>Transaction List</CardTitle>
+            <CardText>Complete list of transctions.</CardText>
+            <a href="/transactions">
               <Button>Transactions</Button>
             </a>
           </Card>

@@ -8,7 +8,7 @@ import { useUserActions } from '_actions'
 
 const agentForm = { first_name: "", last_name: "", email: "", region: "north", rating: "", fee: "", sales: "" }
 
-export default function Create({ history }) {
+export default function CreateAgent({ history }) {
     const userActions = useUserActions()
     const [form, setForm] = useState(agentForm)
 
@@ -27,7 +27,6 @@ export default function Create({ history }) {
                 history.push('/login')
             }
         }
-
         authSession()
     }, [])
 
@@ -187,7 +186,7 @@ export default function Create({ history }) {
                 <div className="form-group">
                     <input
                         type="submit"
-                        value="Create agent"
+                        value="Create Agent"
                         className="btn btn-primary"
                     />
                 </div>

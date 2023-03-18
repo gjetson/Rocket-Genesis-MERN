@@ -7,8 +7,7 @@ const TransactionSchema = mongoose.Schema({
             values: ['north', 'south', 'east', 'west'],
             msg: 'value must be north, south, east or west'
         },
-        required: true,
-        unique: true
+        required: true
     },
     description: {
         type: String,
@@ -24,11 +23,6 @@ const TransactionSchema = mongoose.Schema({
         type: Number,
         default: 0,
         min: 0
-    },
-    agent: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Agent',
-        required: true,
     }
 }, { timestamps: true })
 

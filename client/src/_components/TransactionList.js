@@ -9,19 +9,17 @@ import Confirm from './Confirm'
 import { getCookie } from 'react-use-cookie'
 import { useUserActions } from '_actions'
 
-const Agent = (props) => (
+const Transaction = (props) => (
     <tr>
-        <td>{props.agent.first_name}</td>
-        <td>{props.agent.last_name}</td>
-        <td>{props.agent.email}</td>
-        <td>{props.agent.region}</td>
-        <td>{props.agent.rating}</td>
-        <td>{props.agent.fee}</td>
+        <td>{props.transaction.description}</td>
+        <td>{props.transaction.sale}</td>
+        <td>{props.transaction.fee}</td>
+        <td>{props.transaction.region}</td>
         <td>
-            <Link className="btn btn-link" to={`/edit/agent/${props.agent._id}`}>Edit</Link>
+            <Link className="btn btn-link" to={`/edit/transaction/${props.transaction._id}`}>Edit</Link>
             <button className="btn btn-link"
                 onClick={() => {
-                    props.deleteAgent(props.agent._id)
+                    props.deleteTransaction(props.transaction._id)
                 }}
             >
                 Delete
@@ -30,8 +28,8 @@ const Agent = (props) => (
     </tr>
 )
 
-export default function AgentList({ history }) {
-    const [agents, setAgents] = useState([])
+export default function Transactionist({ history }) {
+    const [transactions, setTransactions] = useState([])
     const userActions = useUserActions()
 
     useEffect(() => {
@@ -52,43 +50,43 @@ export default function AgentList({ history }) {
     }, [])
 
     useEffect(() => {
-        async function getAgents() {
+        async function getTransactions() {
             try {
-                const response = await fetch(`http://localhost:3004/agents/`)
+                const response = await fetch(`http://localhost:3004/transactions/`)
                 if (!response.ok) {
                     throw new Error(`An error occurred: ${response.statusText}`)
                 }
                 const data = await response.json()
-                setAgents(data)
+                setTransactions(data)
             } catch (err) {
                 console.error(err)
             }
         }
-        getAgents()
+        getTransactions()
         return
-    }, [agents.length])
+    }, [transactions.length])
 
 
     const confirmDelete = (id) => {
         confirmAlert({
             customUI: ({ onClose }) => {
                 return (
-                    <Confirm msg={'delete'} onClose={onClose} onConfirm={() => { deleteAgent(id); onClose() }} />
+                    <Confirm msg={'delete'} onClose={onClose} onConfirm={() => { deleteTransaction(id); onClose() }} />
                 )
             }
         })
     }
 
-    async function deleteAgent(id) {
+    async function deleteTransaction(id) {
         try {
-            const valid = await fetch(`http://localhost:3004/agent/delete/${id}`, {
+            const valid = await fetch(`http://localhost:3004/transaction/delete/${id}`, {
                 method: "DELETE"
             })
             if (valid && valid.status === 200) {
-                toast.success('Agent deleted.', {
+                toast.success('Transaction deleted.', {
                     onClose: () => {
-                        const filtered = agents.filter((el) => el._id !== id)
-                        setAgents(filtered)
+                        const filtered = transactions.filter((el) => el._id !== id)
+                        setTransactions(filtered)
                     }
                 })
             }
@@ -97,13 +95,13 @@ export default function AgentList({ history }) {
         }
     }
 
-    function agentList() {
-        return agents.map((agent) => {
+    function transactionList() {
+        return transactions.map((transaction) => {
             return (
-                <Agent
-                    agent={agent}
-                    deleteAgent={() => confirmDelete(agent._id)}
-                    key={agent._id}
+                <Transaction
+                    transaction={transaction}
+                    deleteTransaction={() => confirmDelete(transaction._id)}
+                    key={transaction._id}
                 />
             )
         })
@@ -111,20 +109,18 @@ export default function AgentList({ history }) {
 
     return (
         <div>
-            <h3>Agent List</h3>
+            <h3>Transaction List</h3>
             <table className="table table-striped" style={{ marginTop: 20 }}>
                 <thead>
                     <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Email</th>
-                        <th>Region</th>
-                        <th>Rating</th>
+                        <th>Description</th>
+                        <th>Sale</th>
                         <th>Fee</th>
-                        <th><Link className="btn btn-link" to={`/create/agent`}>Create Agent</Link></th>
+                        <th>Region</th>
+                        <th><Link className="btn btn-link" to={`/create/transaction`}>Create Transaction</Link></th>
                     </tr>
                 </thead>
-                <tbody>{agentList()}</tbody>
+                <tbody>{transactionList()}</tbody>
             </table>
             <ToastContainer
                 position="top-center"

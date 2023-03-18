@@ -9,19 +9,14 @@ import Confirm from './Confirm'
 import { getCookie } from 'react-use-cookie'
 import { useUserActions } from '_actions'
 
-
-export default function Edit({ history }) {
+export default function EditTransaction({ history }) {
     const userActions = useUserActions()
-
     const [form, setForm] = useState({
-        first_name: "",
-        last_name: "",
-        email: "",
-        region: "",
-        rating: "",
+        description: "",
+        sale: "",
         fee: "",
-        sales: "",
-        agents: [],
+        region: "",
+        transactions: [],
     })
     const params = useParams()
 
@@ -45,14 +40,14 @@ export default function Edit({ history }) {
 
     useEffect(() => {
         async function fetchData() {
-            const response = await fetch(`http://localhost:3004/agent/${params.id}`)
+            const response = await fetch(`http://localhost:3004/transaction/${params.id}`)
             if (!response.ok) {
                 const message = `An error has occurred: ${response.statusText}`
                 window.alert(message)
             }
             const agent = await response.json()
             if (!agent) {
-                console.error(`Agent with id ${params.id} not found`)
+                console.error(`Transaction with id ${params.id} not found`)
             }
             setForm(agent)
             return
@@ -70,92 +65,87 @@ export default function Edit({ history }) {
 
     function onSubmit(e) {
         e.preventDefault()
-
         confirmAlert({
             customUI: ({ onClose }) => {
                 return (
-                    <Confirm msg={'update'} onClose={onClose} onConfirm={() => { editAgent(); onClose() }} />
+                    <Confirm msg={'update'} onClose={onClose} onConfirm={() => { editTransaction(); onClose() }} />
                 )
             }
         })
     }
 
 
-    const editAgent = async () => {
-        const editedAgent = {
-            first_name: form.first_name,
-            last_name: form.last_name,
-            email: form.il,
-            region: form.region,
-            rating: form.rating,
+    const editTransaction = async () => {
+        const editedTransaction = {
+            description: form.description,
+            sale: form.sale,
             fee: form.fee,
-            sales: form.sales
+            region: form.region
         }
-        console.log(editedAgent)
+        console.log(editedTransaction)
         try {
-            const valid = await fetch(`http://localhost:3004/agent/update/${params.id}`, {
+            const valid = await fetch(`http://localhost:3004/transaction/update/${params.id}`, {
                 method: "POST",
-                body: JSON.stringify(editedAgent),
+                body: JSON.stringify(editedTransaction),
                 headers: {
                     'Content-Type': 'application/json'
                 },
             })
             if (valid) {
                 if (valid.status === 201) {
-                    toast.success('Agent updated.', {
+                    toast.success('Transaction updated.', {
                         onClose: () => {
-                            history.push('/agents')
-                        }
-                    })
-                } else if (valid.status === 401) {
-                    toast.error(`Email: ${editedAgent.email} is NOT unique! Please enter a unique email.`, {
-                        onClose: () => {
-                            editedAgent.email = ''
-                            setForm(editedAgent)
+                            history.push('/transactions')
                         }
                     })
                 }
+                // else if (valid.status === 401) {
+                //     toast.error(`Email: ${editedAgent.email} is NOT unique! Please enter a unique email.`, {
+                //         onClose: () => {
+                //             editedAgent.email = ''
+                //             setForm(editedAgent)
+                //         }
+                //     })
+                // }
             }
         } catch (err) {
             console.error(err)
         }
     }
-
-
     return (
         <div>
-            <h3>Update Agent</h3>
+            <h3>Update Transaction</h3>
             <form onSubmit={onSubmit}>
                 <div className="form-group">
-                    <label htmlFor="first_name">First Name: </label>
+                    <label htmlFor="description">Description: </label>
                     <input
                         type="text"
                         className="form-control"
-                        id="first_name"
-                        value={form.first_name}
-                        onChange={(e) => updateForm({ first_name: e.target.value })}
+                        id="description"
+                        value={form.description}
+                        onChange={(e) => updateForm({ description: e.target.value })}
                         required
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="last_name">Last Name: </label>
+                    <label htmlFor="sale">Sale: </label>
                     <input
                         type="text"
                         className="form-control"
-                        id="last_name"
-                        value={form.last_name}
-                        onChange={(e) => updateForm({ last_name: e.target.value })}
+                        id="sale"
+                        value={form.sale}
+                        onChange={(e) => updateForm({ sale: e.target.value })}
                         required
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="email">Email: </label>
+                    <label htmlFor="fee">Fee: </label>
                     <input
-                        type="email"
+                        type="text"
                         className="form-control"
-                        id="email"
-                        value={form.email}
-                        onChange={(e) => updateForm({ email: e.target.value })}
+                        id="fee"
+                        value={form.fee}
+                        onChange={(e) => updateForm({ fee: e.target.value })}
                         required
                     />
                 </div>
@@ -207,36 +197,6 @@ export default function Edit({ history }) {
                             onChange={(e) => updateForm({ region: e.target.value })}
                         />
                         <label htmlFor="regionWest" className="form-check-label">West</label>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="rating">Rating: </label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="rating"
-                            value={form.rating}
-                            onChange={(e) => updateForm({ rating: e.target.value })}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="fee">Fee: </label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="fee"
-                            value={form.fee}
-                            onChange={(e) => updateForm({ fee: e.target.value })}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="sales">Sales: </label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="sales"
-                            value={form.sales}
-                            onChange={(e) => updateForm({ sales: e.target.value })}
-                        />
                     </div>
                 </div>
                 <br />

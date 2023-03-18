@@ -49,7 +49,7 @@ const updateById = async (req, res) => {
             req.body,
             { new: true, upsert: false })
         if (trn) {
-            res.status(200).json(trn)
+            res.status(201).json(trn)
         }
         else {
             res.status(404).json({ err: `Transaction not found for id: ${req.params.id}` })
