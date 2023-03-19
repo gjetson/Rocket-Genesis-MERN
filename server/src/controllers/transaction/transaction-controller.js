@@ -12,7 +12,18 @@ const create = async (req, res) => {
 
 const getAll = async (req, res) => {
     try {
-        const trn = await Transaction.find({}).sort({ last_name: 1 })
+        const trn = await Transaction.find({}).populate('agent').sort({ updatedAt: 1 })
+        console.log(trn)
+        res.status(200).json(trn)
+    } catch (err) {
+        console.error(err)
+        res.status(500).send({ error: err })
+    }
+}
+
+const getLimit = async (req, res) => {
+    try {
+        const trn = await Transaction.find({}).limit(req.params.limit).populate('agent').sort({ updatedAt: 1 })
         console.log(trn)
         res.status(200).json(trn)
     } catch (err) {
@@ -81,4 +92,4 @@ const deleteById = async (req, res) => {
     }
 }
 
-module.exports = { create, getAll, getById, getByAgentId, updateById, deleteById }
+module.exports = { create, getAll, getLimit, getById, getByAgentId, updateById, deleteById }

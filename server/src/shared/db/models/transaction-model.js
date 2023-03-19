@@ -1,28 +1,14 @@
 const mongoose = require('mongoose')
 
 const TransactionSchema = mongoose.Schema({
-    region: {
-        type: String,
-        enum: {
-            values: ['north', 'south', 'east', 'west'],
-            msg: 'value must be north, south, east or west'
-        },
-        required: true
-    },
-    description: {
-        type: String,
+    amount: {
+        type: Number,
         trim: true,
         required: true
     },
-    sale: {
-        type: Number,
-        default: 0,
-        min: 0
-    },
-    fee: {
-        type: Number,
-        default: 0,
-        min: 0
+    agent: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Agent'
     }
 }, { timestamps: true })
 

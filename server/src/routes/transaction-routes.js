@@ -3,6 +3,7 @@ const Controller = require('../controllers/transaction/transaction-controller')
 const registerTransactionRoutes = (app) => {
     app.post('/transaction', Controller.create)
     app.get('/transactions', Controller.getAll)
+    app.get('/transactions/limit/:limit', Controller.getLimit)
     app.get('/transaction/:id', Controller.getById)
     app.get('/transaction/agent/:id', Controller.getByAgentId)
     app.post('/transaction/update/:id', Controller.updateById)
